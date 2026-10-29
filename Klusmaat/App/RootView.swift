@@ -3,6 +3,7 @@
 //  Klusmaat
 //
 //  Eerste scherm van de app. De standaard tabbalk is verborgen; KlusmaatTabBar neemt die plek in.
+//  De content scrolt onder het glas door.
 //
 
 import SwiftUI
