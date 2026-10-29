@@ -10,9 +10,9 @@ import SwiftUI
 
 struct KlusmaatTabBar: View {
     @Binding var selectie: AppTab
+    /// Swipe-voortgang tussen de tabs: 0 is de eerste tab, 1 de tweede, 0,5 halverwege. Hier volgt de selectie-pil op.
+    var voortgang: CGFloat
     let onPlaatsen: () -> Void
-
-    @Namespace private var selectieAnimatie
 
     var body: some View {
         GlassEffectContainer(spacing: 12) {
@@ -22,6 +22,7 @@ struct KlusmaatTabBar: View {
                         tabKnop(tab)
                     }
                 }
+                .background { selectiePil }
                 .padding(6)
                 .glassEffect(.regular.interactive(), in: .capsule)
 
@@ -39,8 +40,24 @@ struct KlusmaatTabBar: View {
         .padding(.horizontal, 20)
     }
 
+    /// Volgt de swipe live en rekt halverwege twee tabs iets uit, zodat hij als een druppel meebeweegt.
+    private var selectiePil: some View {
+        GeometryReader { geo in
+            let aantal = CGFloat(AppTab.allCases.count)
+            let tabBreedte = geo.size.width / aantal
+            let positie = min(max(voortgang, 0), aantal - 1)
+            let rek = 1 + 0.35 * sin(.pi * (positie - positie.rounded(.down)))
+
+            Capsule()
+                .fill(Color.klusGroen.opacity(0.12))
+                .frame(width: tabBreedte * rek, height: geo.size.height)
+                .offset(x: positie * tabBreedte - tabBreedte * (rek - 1) / 2)
+        }
+    }
+
     private func tabKnop(_ tab: AppTab) -> some View {
-        let geselecteerd = selectie == tab
+        // Kleur wisselt zodra de pil over de helft is, niet pas als de swipe klaar is
+        let geselecteerd = AppTab.allCases.firstIndex(of: tab) == Int(voortgang.rounded())
 
         return Button {
             withAnimation(.snappy) { selectie = tab }
@@ -57,13 +74,6 @@ struct KlusmaatTabBar: View {
             .foregroundStyle(geselecteerd ? Color.klusGroen : Color.primary)
             .frame(maxWidth: .infinity)
             .frame(height: 56)
-            .background {
-                if geselecteerd {
-                    Capsule()
-                        .fill(Color.klusGroen.opacity(0.12))
-                        .matchedGeometryEffect(id: "selectie", in: selectieAnimatie)
-                }
-            }
             .contentShape(.capsule)
         }
         .buttonStyle(.plain)
@@ -73,5 +83,5 @@ struct KlusmaatTabBar: View {
 
 #Preview {
     @Previewable @State var selectie = AppTab.zoeken
-    KlusmaatTabBar(selectie: $selectie, onPlaatsen: {})
+    KlusmaatTabBar(selectie: $selectie, voortgang: 0, onPlaatsen: {})
 }
