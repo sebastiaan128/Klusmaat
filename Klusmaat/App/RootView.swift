@@ -2,32 +2,37 @@
 //  RootView.swift
 //  Klusmaat
 //
-//  Eerste scherm van de app: de tabbalk met de features. De camera-knop uit de Android-navbar
-//  is hier een gewone middelste tab, zodat we de native Liquid Glass-tabbalk van iOS houden.
+//  Eerste scherm van de app. De standaard tabbalk is verborgen; KlusmaatTabBar neemt die plek in.
 //
 
 import SwiftUI
 
 struct RootView: View {
-    @State private var geselecteerdeTab: AppTab = .home
+    @State private var geselecteerdeTab: AppTab = .zoeken
+    @State private var toontPlaatsen = false
 
     var body: some View {
         TabView(selection: $geselecteerdeTab) {
-            Tab("Home", systemImage: "house.fill", value: .home) {
-                HomeView()
+            Tab(value: AppTab.zoeken) {
+                HomeView().toolbar(.hidden, for: .tabBar)
             }
-            Tab("Overzicht", systemImage: "list.bullet", value: .overzicht) {
-                OverzichtView()
+            Tab(value: AppTab.mijnKlussen) {
+                MijnKlussenView().toolbar(.hidden, for: .tabBar)
             }
-            Tab("Plaatsen", systemImage: "camera.fill", value: .plaatsen) {
-                PlaatsenView()
+            Tab(value: AppTab.reacties) {
+                BerichtenView().toolbar(.hidden, for: .tabBar)
             }
-            Tab("Chat", systemImage: "bubble.left.and.bubble.right.fill", value: .chat) {
-                BerichtenView()
+            Tab(value: AppTab.profiel) {
+                ProfielView().toolbar(.hidden, for: .tabBar)
             }
-            Tab("Account", systemImage: "person.fill", value: .account) {
-                ProfielView()
+        }
+        .safeAreaInset(edge: .bottom) {
+            KlusmaatTabBar(selectie: $geselecteerdeTab) {
+                toontPlaatsen = true
             }
+        }
+        .sheet(isPresented: $toontPlaatsen) {
+            PlaatsenView()
         }
     }
 }
