@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ProfielView: View {
     var body: some View {
-        PlaceholderScherm(titel: "Account", referentie: "§7.1 — AccountScreen.kt", hint: "Inloggen, registreren en je profiel beheren.")
+        Text("Hello World")
     }
 }
 

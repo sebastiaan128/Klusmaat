@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     var body: some View {
-        PlaceholderScherm(titel: "Home", referentie: "§7.3 — HomeScreen.kt", hint: "Startscherm met zoekfilter en populaire categorieën.")
+        Text("Hello World")
     }
 }
 

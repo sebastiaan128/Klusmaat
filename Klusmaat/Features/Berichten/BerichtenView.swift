@@ -9,7 +9,7 @@ import SwiftUI
 
 struct BerichtenView: View {
     var body: some View {
-        PlaceholderScherm(titel: "Berichten", referentie: "§7.5 — MessagesScreen.kt", hint: "Gesprekken met andere buurtbewoners.")
+        Text("Hello World")
     }
 }
 

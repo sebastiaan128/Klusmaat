@@ -9,10 +9,6 @@ import SwiftUI
 
 @main
 struct KlusmaatApp: App {
-    init() {
-        Lettertypen.registreer()
-    }
-
     var body: some Scene {
         WindowGroup {
             RootView()
