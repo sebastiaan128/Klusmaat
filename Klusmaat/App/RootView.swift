@@ -47,7 +47,7 @@ struct RootView: View {
     private func scherm(voor tab: AppTab) -> some View {
         switch tab {
         case .zoeken: HomeView()
-        case .mijnKlussen: MijnKlussenView()
+        case .overzicht: OverzichtView()
         case .reacties: BerichtenView()
         case .profiel: ProfielView()
         }
