@@ -7,14 +7,14 @@
 
 enum AppTab: Hashable, CaseIterable {
     case zoeken
-    case mijnKlussen
+    case overzicht
     case reacties
     case profiel
 
     var titel: String {
         switch self {
         case .zoeken: "Zoeken"
-        case .mijnKlussen: "Mijn klussen"
+        case .overzicht: "Overzicht"
         case .reacties: "Reacties"
         case .profiel: "Profiel"
         }
@@ -23,7 +23,7 @@ enum AppTab: Hashable, CaseIterable {
     var icoon: String {
         switch self {
         case .zoeken: "magnifyingglass"
-        case .mijnKlussen: "doc.text"
+        case .overzicht: "doc.text"
         case .reacties: "bubble.left"
         case .profiel: "person"
         }
