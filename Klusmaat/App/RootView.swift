@@ -29,7 +29,6 @@ struct RootView: View {
                 ProfielView()
             }
         }
-        .tint(.coffee)
     }
 }
 
