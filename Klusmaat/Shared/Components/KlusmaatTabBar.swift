@@ -2,15 +2,11 @@
 //  KlusmaatTabBar.swift
 //  Klusmaat
 //
-//  Eigen tabbalk: een glazen capsule met de vier tabs en daarnaast een losse oranje knop om een klus te plaatsen.
+//  Eigen tabbalk: een Liquid Glass-capsule met de vier tabs en daarnaast een losse oranje glazen knop om een klus
+//  te plaatsen. De native TabView zet zo'n losse knop niet naast de tabs, vandaar een eigen balk.
 //
 
 import SwiftUI
-
-extension Color {
-    static let klusGroen = Color(red: 0.17, green: 0.36, blue: 0.30)
-    static let klusOranje = Color(red: 0.93, green: 0.67, blue: 0.36)
-}
 
 struct KlusmaatTabBar: View {
     @Binding var selectie: AppTab
@@ -27,13 +23,13 @@ struct KlusmaatTabBar: View {
                     }
                 }
                 .padding(6)
-                .glassEffect(.regular, in: .capsule)
+                .glassEffect(.regular.interactive(), in: .capsule)
 
                 Button(action: onPlaatsen) {
                     Image(systemName: "plus")
                         .font(.system(size: 26, weight: .medium))
                         .foregroundStyle(.black)
-                        .frame(width: 68, height: 68)
+                        .frame(width: 66, height: 66)
                 }
                 .buttonStyle(.plain)
                 .glassEffect(.regular.tint(.klusOranje).interactive(), in: .circle)
@@ -52,6 +48,7 @@ struct KlusmaatTabBar: View {
             VStack(spacing: 3) {
                 Image(systemName: tab.icoon)
                     .font(.system(size: 20, weight: geselecteerd ? .semibold : .regular))
+                    .symbolVariant(geselecteerd ? .fill : .none)
                 Text(tab.titel)
                     .font(.system(size: 11, weight: .semibold))
                     .lineLimit(1)
