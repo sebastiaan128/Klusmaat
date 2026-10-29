@@ -9,7 +9,7 @@ import SwiftUI
 
 struct GereedschapView: View {
     var body: some View {
-        Text("Gereedschap")
+        PlaceholderScherm(titel: "Gereedschap", referentie: "§7.7 — ToolsScreen.kt", hint: "Gereedschap delen en lenen in je buurt.")
     }
 }
 
