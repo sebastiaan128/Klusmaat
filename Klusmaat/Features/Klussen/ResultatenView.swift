@@ -178,33 +178,38 @@ private struct KlusKaart: View {
     let klus: Klus
 
     var body: some View {
-        HStack(alignment: .top, spacing: 14) {
+        HStack(spacing: 14) {
             foto
 
             VStack(alignment: .leading, spacing: 4) {
-                HStack(alignment: .firstTextBaseline) {
-                    Text(klus.titel)
-                        .font(.headline)
-                        .foregroundStyle(Color.klusTekst)
-                        .lineLimit(2)
-                    Spacer(minLength: 8)
+                Text(klus.titel)
+                    .font(.headline)
+                    .foregroundStyle(Color.klusTekst)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.leading)
+
+                Text("\(klus.afstand) · \(klus.wanneer)")
+                    .font(.subheadline)
+                    .foregroundStyle(Color.klusTekstZacht)
+                    .lineLimit(1)
+
+                HStack(alignment: .firstTextBaseline, spacing: 6) {
                     Text("€ \(klus.vergoeding)")
                         .font(.headline.weight(.bold))
-                        .foregroundStyle(Color.klusTekst)
+                        .foregroundStyle(Color.klusGroen)
+                    Text(klus.duur.rawValue)
+                        .font(.subheadline)
+                        .foregroundStyle(Color.klusTekstZacht)
                 }
-                Text(klus.afstand)
-                Text("\(klus.wanneer) · \(klus.duur.rawValue)")
+                .padding(.top, 2)
             }
-            .font(.subheadline)
-            .foregroundStyle(Color.klusTekstZacht)
+            .frame(maxWidth: .infinity, alignment: .leading)
 
             Image(systemName: "chevron.right")
                 .font(.footnote.weight(.semibold))
                 .foregroundStyle(Color.klusTekstZacht)
-                .frame(maxHeight: .infinity)
         }
         .padding(12)
-        .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color.klusPapier, in: .rect(cornerRadius: 20))
         .overlay { RoundedRectangle(cornerRadius: 20).strokeBorder(Color.klusZand) }
         .contentShape(.rect(cornerRadius: 20))
@@ -239,7 +244,7 @@ private struct KlusKaart: View {
                     .padding(6)
             }
         }
-        .frame(width: 96, height: 96)
+        .frame(width: 84, height: 84)
     }
 }
 

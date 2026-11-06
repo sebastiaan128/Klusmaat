@@ -102,7 +102,7 @@ struct KlusDetailView: View {
                 Text(klus.eigenaar)
                     .font(.headline)
                     .foregroundStyle(Color.klusTekst)
-                Text("Buurtbewoner · \(klus.afstand) bij jou vandaan")
+                Text("Buurtbewoner · \(klus.afstand) van jou")
                     .font(.subheadline)
                     .foregroundStyle(Color.klusTekstZacht)
                     .lineLimit(1)
