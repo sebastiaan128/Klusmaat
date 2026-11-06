@@ -2,7 +2,7 @@
 //  KlusmaatTabBar.swift
 //  Klusmaat
 //
-//  Eigen tabbalk: een Liquid Glass-capsule met de vier tabs en daarnaast een losse oranje glazen knop om een klus
+//  Eigen tabbalk: een Liquid Glass-capsule met de vier tabs en daarnaast een losse salie glazen knop om een klus
 //  te plaatsen. De native TabView zet zo'n losse knop niet naast de tabs, vandaar een eigen balk.
 //
 
@@ -11,7 +11,7 @@ import SwiftUI
 struct KlusmaatTabBar: View {
     @Binding var selectie: AppTab
     /// Swipe-voortgang tussen de tabs: 0 is de eerste tab, 1 de tweede, 0,5 halverwege. Hier volgt de selectie-pil op.
-    var voortgang: CGFloat
+    var voortgang: SwipeVoortgang
     let onPlaatsen: () -> Void
 
     var body: some View {
@@ -29,11 +29,11 @@ struct KlusmaatTabBar: View {
                 Button(action: onPlaatsen) {
                     Image(systemName: "plus")
                         .font(.system(size: 26, weight: .medium))
-                        .foregroundStyle(.black)
+                        .foregroundStyle(Color.klusGroen)
                         .frame(width: 66, height: 66)
                 }
                 .buttonStyle(.plain)
-                .glassEffect(.regular.tint(.klusOranje).interactive(), in: .circle)
+                .glassEffect(.regular.tint(.klusSalie).interactive(), in: .circle)
                 .accessibilityLabel("Klus plaatsen")
             }
         }
@@ -45,7 +45,7 @@ struct KlusmaatTabBar: View {
         GeometryReader { geo in
             let aantal = CGFloat(AppTab.allCases.count)
             let tabBreedte = geo.size.width / aantal
-            let positie = min(max(voortgang, 0), aantal - 1)
+            let positie = min(max(voortgang.waarde, 0), aantal - 1)
             let rek = 1 + 0.35 * sin(.pi * (positie - positie.rounded(.down)))
 
             Capsule()
@@ -57,7 +57,7 @@ struct KlusmaatTabBar: View {
 
     private func tabKnop(_ tab: AppTab) -> some View {
         // Kleur wisselt zodra de pil over de helft is, niet pas als de swipe klaar is
-        let geselecteerd = AppTab.allCases.firstIndex(of: tab) == Int(voortgang.rounded())
+        let geselecteerd = AppTab.allCases.firstIndex(of: tab) == Int(voortgang.waarde.rounded())
 
         return Button {
             withAnimation(.snappy) { selectie = tab }
@@ -71,7 +71,7 @@ struct KlusmaatTabBar: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
             }
-            .foregroundStyle(geselecteerd ? Color.klusGroen : Color.primary)
+            .foregroundStyle(geselecteerd ? Color.klusGroen : Color.klusTekst)
             .frame(maxWidth: .infinity)
             .frame(height: 56)
             .contentShape(.capsule)
@@ -83,5 +83,5 @@ struct KlusmaatTabBar: View {
 
 #Preview {
     @Previewable @State var selectie = AppTab.zoeken
-    KlusmaatTabBar(selectie: $selectie, voortgang: 0, onPlaatsen: {})
+    KlusmaatTabBar(selectie: $selectie, voortgang: SwipeVoortgang(), onPlaatsen: {})
 }
