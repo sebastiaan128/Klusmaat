@@ -2,7 +2,7 @@
 //  FiltersView.swift
 //  Klusmaat
 //
-//  Feature Klussen: sheet om de zoekresultaten te filteren. Wijzigingen gelden pas na het vinkje of de knop onderaan.
+//  Feature Klussen: sheet om de zoekopdracht en de zoekresultaten te filteren. Wijzigingen gelden pas na het vinkje of de knop onderaan.
 //
 
 import SwiftUI
@@ -27,6 +27,29 @@ struct FiltersView: View {
     var body: some View {
         NavigationStack {
             Form {
+                Section {
+                    Picker("Soort klus", selection: $concept.soort) {
+                        Text("Alle soorten").tag(KlusSoort?.none)
+                        ForEach(KlusSoort.allCases) { soort in
+                            Text(soort.rawValue).tag(Optional(soort))
+                        }
+                    }
+                    LabeledContent("Locatie") {
+                        TextField("bv. 3512 AB", text: $concept.postcode)
+                            .multilineTextAlignment(.trailing)
+                            .textContentType(.postalCode)
+                    }
+                    Picker("Afstand", selection: $concept.straalKm) {
+                        ForEach(KlusFilters.stralen, id: \.self) { km in
+                            Text(km.map { "+ \($0) km" } ?? "Overal").tag(km)
+                        }
+                    }
+                } header: {
+                    kop("Zoekopdracht")
+                }
+                .pickerStyle(.menu)
+                .listRowBackground(Color.klusPapier)
+
                 Section {
                     ForEach(KlusDuur.allCases) { duur in
                         duurRij(duur)

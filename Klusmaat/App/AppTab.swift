@@ -2,7 +2,7 @@
 //  AppTab.swift
 //  Klusmaat
 //
-//  De tabs in de tabbalk. De "+"-knop om een klus te plaatsen is geen tab, die opent een sheet.
+//  De tabs in de tabbalk. Plaatsen is de losse "+"-knop rechts; die opent een sheet in plaats van een tab.
 //
 
 enum AppTab: Hashable, CaseIterable {
@@ -10,6 +10,7 @@ enum AppTab: Hashable, CaseIterable {
     case overzicht
     case reacties
     case profiel
+    case plaatsen
 
     var titel: String {
         switch self {
@@ -17,6 +18,7 @@ enum AppTab: Hashable, CaseIterable {
         case .overzicht: "Overzicht"
         case .reacties: "Reacties"
         case .profiel: "Profiel"
+        case .plaatsen: "Plaatsen"
         }
     }
 
@@ -26,6 +28,7 @@ enum AppTab: Hashable, CaseIterable {
         case .overzicht: "doc.text"
         case .reacties: "bubble.left"
         case .profiel: "person"
+        case .plaatsen: "plus"
         }
     }
 }
