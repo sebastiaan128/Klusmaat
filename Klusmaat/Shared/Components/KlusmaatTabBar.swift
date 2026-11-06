@@ -14,6 +14,9 @@ struct KlusmaatTabBar: View {
     var voortgang: SwipeVoortgang
     let onPlaatsen: () -> Void
 
+    /// Hoogte van de balk (de plaatsknop), plus wat lucht erboven.
+    static let hoogte: CGFloat = 66 + 12
+
     var body: some View {
         GlassEffectContainer(spacing: 12) {
             HStack(spacing: 12) {

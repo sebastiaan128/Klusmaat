@@ -10,6 +10,8 @@ struct RootView: View {
             LazyHStack(spacing: 0) {
                 ForEach(AppTab.allCases, id: \.self) { tab in
                     scherm(voor: tab)
+                        // Ruimte voor de zwevende tabbalk in elke lijst, ook in schermen die vanuit de tab openen
+                        .contentMargins(.bottom, KlusmaatTabBar.hoogte, for: .scrollContent)
                         .containerRelativeFrame([.horizontal, .vertical])
                         .id(tab)
                 }
@@ -25,7 +27,7 @@ struct RootView: View {
         } action: { _, voortgang in
             swipe.waarde = voortgang
         }
-        .safeAreaInset(edge: .bottom) {
+        .overlay(alignment: .bottom) {
             KlusmaatTabBar(selectie: $geselecteerdeTab, voortgang: swipe) {
                 toontPlaatsen = true
             }
