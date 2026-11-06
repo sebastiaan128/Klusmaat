@@ -3,65 +3,45 @@ import SwiftUI
 struct RootView: View {
     @State private var geselecteerdeTab: AppTab = .zoeken
     @State private var toontPlaatsen = false
-    @State private var swipe = SwipeVoortgang()
+    @State private var filters = KlusFilters()
 
     var body: some View {
-        ScrollView(.horizontal) {
-            LazyHStack(spacing: 0) {
-                ForEach(AppTab.allCases, id: \.self) { tab in
-                    scherm(voor: tab)
-                        // Ruimte voor de zwevende tabbalk in elke lijst, ook in schermen die vanuit de tab openen
-                        .contentMargins(.bottom, KlusmaatTabBar.hoogte, for: .scrollContent)
-                        .containerRelativeFrame([.horizontal, .vertical])
-                        .id(tab)
-                }
+        TabView(selection: tabSelectie) {
+            tab(.zoeken) {
+                HomeView(
+                    filters: $filters,
+                    onToonResultaten: { geselecteerdeTab = .overzicht },
+                    onProfiel: { geselecteerdeTab = .profiel },
+                    onPlaatsen: { toontPlaatsen = true }
+                )
             }
-            .scrollTargetLayout()
+            tab(.overzicht) { OverzichtView(filters: $filters) }
+            tab(.reacties) { BerichtenView() }
+            tab(.profiel) { ProfielView() }
+            tab(.plaatsen) { Color.clear }
         }
-        .scrollTargetBehavior(.paging)
-        .scrollIndicators(.hidden)
-        .scrollPosition(id: scrollPositie)
-        .onScrollGeometryChange(for: CGFloat.self) { geometrie in
-            guard geometrie.containerSize.width > 0 else { return 0 }
-            return geometrie.contentOffset.x / geometrie.containerSize.width
-        } action: { _, voortgang in
-            swipe.waarde = voortgang
-        }
-        .overlay(alignment: .bottom) {
-            KlusmaatTabBar(selectie: $geselecteerdeTab, voortgang: swipe) {
-                toontPlaatsen = true
-            }
-        }
+        .tint(.klusGroen)
         .sheet(isPresented: $toontPlaatsen) {
             PlaatsenView()
         }
     }
 
-    @ViewBuilder
-    private func scherm(voor tab: AppTab) -> some View {
-        switch tab {
-        case .zoeken:
-            HomeView(onProfiel: { withAnimation(.snappy) { geselecteerdeTab = .profiel } }, onPlaatsen: { toontPlaatsen = true })
-        case .overzicht: OverzichtView()
-        case .reacties: BerichtenView()
-        case .profiel: ProfielView()
-        }
+    private func tab(_ tab: AppTab, @ViewBuilder inhoud: () -> some View) -> some TabContent<AppTab> {
+        Tab(tab.titel, systemImage: tab.icoon, value: tab, content: inhoud)
     }
 
-    private var scrollPositie: Binding<AppTab?> {
+    /// Plaatsen is geen echte tab: de geselecteerde tab blijft staan en de sheet gaat open.
+    private var tabSelectie: Binding<AppTab> {
         Binding {
             geselecteerdeTab
         } set: { tab in
-            if let tab { geselecteerdeTab = tab }
+            if tab == .plaatsen {
+                toontPlaatsen = true
+            } else {
+                geselecteerdeTab = tab
+            }
         }
     }
-}
-
-/// Swipe-voortgang in een eigen object: alleen de tabbalk leest hem, zodat de schermen
-/// niet bij elk frame van een swipe opnieuw worden opgebouwd.
-@Observable
-final class SwipeVoortgang {
-    var waarde: CGFloat = 0
 }
 
 #Preview {

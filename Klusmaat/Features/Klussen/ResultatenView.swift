@@ -55,14 +55,21 @@ struct ResultatenView: View {
         #endif
         .toolbar {
             ToolbarItem(placement: .principal) {
-                VStack(spacing: 0) {
-                    Text(filters.titel)
-                        .font(.headline)
-                    Text(filters.locatieLabel)
-                        .font(.caption)
-                        .foregroundStyle(Color.klusTekstZacht)
+                // Een tik op de zoekopdracht opent de sheet om hem te wijzigen
+                Button {
+                    toontFilters = true
+                } label: {
+                    VStack(spacing: 0) {
+                        Text(filters.titel)
+                            .font(.headline)
+                        Text(filters.locatieLabel)
+                            .font(.caption)
+                            .foregroundStyle(Color.klusTekstZacht)
+                    }
+                    .foregroundStyle(Color.klusTekst)
                 }
-                .foregroundStyle(Color.klusTekst)
+                .buttonStyle(.plain)
+                .accessibilityHint("Zoekopdracht wijzigen")
             }
             ToolbarItemGroup(placement: .primaryAction) {
                 Menu {

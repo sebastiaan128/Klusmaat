@@ -1,22 +1,15 @@
 import SwiftUI
 
 struct HomeView: View {
+    @Binding var filters: KlusFilters
+    var onToonResultaten: () -> Void = {}
     var onProfiel: () -> Void = {}
     var onPlaatsen: () -> Void = {}
-
-    @State private var filters = KlusFilters()
-    @State private var toontResultaten = false
 
     private let klussen = KlusService.voorbeeldKlussen
 
     var body: some View {
-        NavigationStack {
-            zoekScherm
-                .toolbarVisibility(.hidden, for: .navigationBar)
-                .navigationDestination(isPresented: $toontResultaten) {
-                    ResultatenView(filters: $filters, klussen: klussen)
-                }
-        }
+        zoekScherm
     }
 
     private var aantalGevonden: Int {
@@ -127,9 +120,7 @@ struct HomeView: View {
     }
 
     private var toonKnop: some View {
-        Button {
-            toontResultaten = true
-        } label: {
+        Button(action: onToonResultaten) {
             Label(
                 aantalGevonden == 0 ? "Geen klussen gevonden" : "Toon \(klussenLabel(aantalGevonden, soort: filters.soort))",
                 systemImage: "magnifyingglass"
@@ -211,5 +202,6 @@ private struct FilterRij<Waarde: View>: View {
 }
 
 #Preview {
-    HomeView()
+    @Previewable @State var filters = KlusFilters()
+    HomeView(filters: $filters)
 }
