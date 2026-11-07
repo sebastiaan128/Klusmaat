@@ -1,14 +1,6 @@
-//
-//  KlusService.swift
-//  Klusmaat
-//
-//  Services/ bevat logica die met externe systemen praat (later Firebase). Deze service haalt straks klussen op en slaat ze op.
-//
-
 import Foundation
 
 final class KlusService {
-    /// Voorbeeldklussen tot Firebase er is, gelijk aan sampleJobs op Android.
     static let voorbeeldKlussen: [Klus] = [
         Klus(id: "1", titel: "Heg snoeien in de voortuin", soort: .tuin, afstand: "400 m", afstandMeters: 400, vergoeding: 40,
              wanneer: "Za 10 okt", timing: .weekend, duur: .halveDag, urenGeleden: 2,

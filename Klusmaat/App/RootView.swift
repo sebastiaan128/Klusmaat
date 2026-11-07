@@ -18,7 +18,11 @@ struct RootView: View {
             tab(.overzicht) { OverzichtView(filters: $filters) }
             tab(.reacties) { BerichtenView() }
             tab(.profiel) { ProfielView() }
-            tab(.plaatsen) { Color.clear }
+
+ 
+            Tab(AppTab.plaatsen.titel, systemImage: AppTab.plaatsen.icoon, value: .plaatsen, role: .prominent) {
+                Color.clear
+            }
         }
         .tint(.klusGroen)
         .sheet(isPresented: $toontPlaatsen) {
@@ -30,7 +34,6 @@ struct RootView: View {
         Tab(tab.titel, systemImage: tab.icoon, value: tab, content: inhoud)
     }
 
-    /// Plaatsen is geen echte tab: de geselecteerde tab blijft staan en de sheet gaat open.
     private var tabSelectie: Binding<AppTab> {
         Binding {
             geselecteerdeTab

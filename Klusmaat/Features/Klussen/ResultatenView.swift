@@ -1,10 +1,3 @@
-//
-//  ResultatenView.swift
-//  Klusmaat
-//
-//  Feature Klussen: de klussen die passen bij de zoekopdracht van het startscherm, met sortering en filtersheet.
-//
-
 import SwiftUI
 
 struct ResultatenView: View {
@@ -55,7 +48,6 @@ struct ResultatenView: View {
         #endif
         .toolbar {
             ToolbarItem(placement: .principal) {
-                // Een tik op de zoekopdracht opent de sheet om hem te wijzigen
                 Button {
                     toontFilters = true
                 } label: {
@@ -98,7 +90,7 @@ struct ResultatenView: View {
         }
     }
 
-    /// Groen bolletje met het aantal filters uit de sheet, in plaats van het rode standaardbolletje.
+
     @ViewBuilder
     private var filterBolletje: some View {
         let aantal = filters.aantalVerfijningen
@@ -112,7 +104,7 @@ struct ResultatenView: View {
         }
     }
 
-    /// Filters uit de sheet als chips; een tik haalt het filter weg, net als ActiveFilterChips op Android.
+
     @ViewBuilder
     private var actieveFilters: some View {
         let chips = filterChips
@@ -180,7 +172,6 @@ struct ResultatenView: View {
     }
 }
 
-/// Klus in de resultatenlijst: foto, titel, vergoeding, afstand en wanneer.
 private struct KlusKaart: View {
     let klus: Klus
 
@@ -232,9 +223,7 @@ private struct KlusKaart: View {
                 }
                 .overlay {
                     if let url = klus.fotos.first {
-                        AsyncImage(url: url) { afbeelding in
-                            afbeelding.resizable().scaledToFill()
-                        } placeholder: {
+                        KlusAfbeelding(url: url, maxPunten: 84) {
                             Color.clear
                         }
                     }

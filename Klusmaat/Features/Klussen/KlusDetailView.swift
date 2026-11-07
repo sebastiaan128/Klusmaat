@@ -1,93 +1,128 @@
-//
-//  KlusDetailView.swift
-//  Klusmaat
-//
-//  Feature Klussen: alles over één klus, met de knoppen om te helpen of een bericht te sturen. Gelijk aan
-//  JobDetailScreen op Android.
-//
-
 import SwiftUI
 
 struct KlusDetailView: View {
     let klus: Klus
 
     @State private var helptMee = false
+    @State private var bewaard = false
+
+    /// Hoeveel de witte kaart over de foto's valt
+    private let overlap: CGFloat = 32
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 28) {
-                VStack(spacing: 16) {
-                    if !klus.fotos.isEmpty {
-                        FotoGalerij(fotos: klus.fotos)
-                    }
-                    samenvatting
-                }
+            VStack(spacing: 0) {
+                FotoGalerij(klus: klus, ruimteOnder: overlap)
+                    .frame(height: 380)
 
-                sectie("Omschrijving") {
-                    Text(klus.beschrijving)
-                        .foregroundStyle(Color.klusTekst)
-                }
-
-                sectie("Geplaatst door") { eigenaarKaart }
-
-                sectie("Locatie") { locatie }
-
-                knoppen
+                inhoud
+                    .background(.white, in: UnevenRoundedRectangle(topLeadingRadius: 32, topTrailingRadius: 32))
+                    .padding(.top, -overlap)
             }
-            .padding(.horizontal, 20)
-            .padding(.top, 8)
-            .padding(.bottom, 24)
         }
         .scrollIndicators(.hidden)
+        .ignoresSafeArea(edges: .top)
         .background(.white)
-        .navigationTitle("Klus")
+        .safeAreaInset(edge: .bottom) { actieBalk }
         .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackgroundVisibility(.hidden, for: .navigationBar)
+        .toolbarVisibility(.hidden, for: .tabBar)
+        .toolbar {
+            ToolbarItemGroup(placement: .primaryAction) {
+                Button {
+                    withAnimation(.snappy) { bewaard.toggle() }
+                } label: {
+                    Image(systemName: bewaard ? "heart.fill" : "heart")
+                        .contentTransition(.symbolEffect(.replace))
+                }
+                .accessibilityLabel(bewaard ? "Niet meer bewaren" : "Bewaren")
+
+                ShareLink(item: klus.titel) {
+                    Image(systemName: "square.and.arrow.up")
+                }
+                .accessibilityLabel("Delen")
+            }
+        }
         .tint(.klusGroen)
     }
 
-    private var samenvatting: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text(klus.soort.rawValue)
-                    .font(.footnote.weight(.semibold))
-                    .foregroundStyle(Color.klusGroen)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 5)
-                    .background(Color.klusSalie, in: .capsule)
-
-                Spacer()
-
-                Label(klus.afstand, systemImage: "mappin")
-                    .font(.footnote)
+    private var inhoud: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            HStack(spacing: 8) {
+                label(klus.soort.rawValue)
+                label("Open", bolletje: true)
+                Text("Geplaatst \(klus.geplaatst)")
+                    .font(.subheadline)
                     .foregroundStyle(Color.klusTekstZacht)
+                    .lineLimit(1)
             }
 
             Text(klus.titel)
-                .font(.title2.bold())
+                .font(.title.bold())
                 .foregroundStyle(Color.klusTekst)
 
-            Text("Geplaatst \(klus.geplaatst)")
+            HStack(spacing: 10) {
+                feit(icoon: "mappin.and.ellipse", waarde: klus.afstand, uitleg: "Afstand")
+                feit(icoon: "calendar", waarde: klus.wanneer, uitleg: "Wanneer")
+                feit(icoon: "clock", waarde: klus.duur.rawValue, uitleg: "Duur")
+            }
+
+            Text(klus.beschrijving)
+                .font(.body)
+                .lineSpacing(4)
+                .foregroundStyle(Color.klusTekst)
+
+            eigenaarKaart
+
+            Text(helptMee
+                 ? "Het adres wordt met je gedeeld in de chat."
+                 : "Het exacte adres zie je zodra je aanbiedt te helpen.")
                 .font(.footnote)
                 .foregroundStyle(Color.klusTekstZacht)
-
-            Rectangle()
-                .fill(Color.klusZand)
-                .frame(height: 1)
-
-            HStack {
-                Text("€ \(klus.vergoeding)")
-                    .font(.title3.bold())
-                    .foregroundStyle(Color.klusTekst)
-                Spacer()
-                Text("\(klus.wanneer) · \(klus.duur.rawValue)")
-                    .font(.subheadline)
-                    .foregroundStyle(Color.klusTekstZacht)
-            }
+                .contentTransition(.opacity)
         }
-        .padding(24)
+        .padding(.horizontal, 20)
+        .padding(.top, 24)
+        .padding(.bottom, 24)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.klusPapier, in: .rect(cornerRadius: 28))
-        .overlay { RoundedRectangle(cornerRadius: 28).strokeBorder(Color.klusZand) }
+    }
+
+    private func label(_ tekst: String, bolletje: Bool = false) -> some View {
+        HStack(spacing: 6) {
+            if bolletje {
+                Circle()
+                    .fill(Color.klusGroen)
+                    .frame(width: 7, height: 7)
+            }
+            Text(tekst)
+        }
+        .font(.subheadline.weight(.semibold))
+        .foregroundStyle(Color.klusGroen)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .background(Color.klusSalie.opacity(0.45), in: .capsule)
+    }
+
+    private func feit(icoon: String, waarde: String, uitleg: String) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Image(systemName: icoon)
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(Color.klusGroen)
+                .frame(height: 22)
+                .padding(.bottom, 6)
+            Text(waarde)
+                .font(.subheadline.weight(.bold))
+                .foregroundStyle(Color.klusTekst)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+            Text(uitleg)
+                .font(.footnote)
+                .foregroundStyle(Color.klusTekstZacht)
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.klusCreme, in: .rect(cornerRadius: 18))
+        .accessibilityElement(children: .combine)
     }
 
     private var eigenaarKaart: some View {
@@ -110,110 +145,93 @@ struct KlusDetailView: View {
 
             Spacer(minLength: 0)
         }
-        .padding(16)
-        .background(Color.klusPapier, in: .rect(cornerRadius: 24))
-        .overlay { RoundedRectangle(cornerRadius: 24).strokeBorder(Color.klusZand) }
+        .padding(14)
+        .background(Color.klusCreme, in: .rect(cornerRadius: 22))
     }
 
-    private var locatie: some View {
-        HStack(spacing: 14) {
-            Image(systemName: "mappin")
-                .font(.system(size: 18, weight: .semibold))
-                .foregroundStyle(Color.klusGroen)
-                .frame(width: 40, height: 40)
-                .background(Color.klusSalie, in: .circle)
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Op \(klus.afstand) van jou")
-                    .font(.body.weight(.medium))
-                    .foregroundStyle(Color.klusTekst)
-                Text(helptMee
-                     ? "Het adres wordt met je gedeeld in de chat."
-                     : "Het exacte adres zie je zodra je aanbiedt te helpen.")
-                    .font(.subheadline)
+    private var actieBalk: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 0) {
+                Text("Vergoeding")
+                    .font(.footnote)
                     .foregroundStyle(Color.klusTekstZacht)
-                    .contentTransition(.opacity)
+                Text("€ \(klus.vergoeding)")
+                    .font(.title2.bold())
+                    .foregroundStyle(Color.klusTekst)
             }
-        }
-    }
+            .padding(.leading, 12)
 
-    private var knoppen: some View {
-        VStack(spacing: 12) {
+            Spacer()
+
             Button {
                 withAnimation(.snappy) { helptMee.toggle() }
             } label: {
-                Label(helptMee ? "Je helpt mee" : "Ik help mee",
-                      systemImage: helptMee ? "checkmark" : "hands.clap")
+                Label(helptMee ? "Je helpt mee" : "Ik wil helpen",
+                      systemImage: helptMee ? "checkmark" : "bubble.left")
                     .font(.headline)
-                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal, 8)
                     .padding(.vertical, 8)
             }
             .buttonStyle(.glassProminent)
-            .tint(helptMee ? .klusSalie : .klusGroenDonker)
+            .tint(helptMee ? .klusSalie : .klusGroen)
             .foregroundStyle(helptMee ? Color.klusGroen : .white)
             .accessibilityHint(helptMee ? "Trekt je aanbod in" : "Biedt aan om te helpen")
-
-            // Reacties bestaat nog niet, dus deze knop doet nog niets
-            Button {} label: {
-                Label("Stuur \(klus.eigenaar) een bericht", systemImage: "bubble.left.and.bubble.right")
-                    .font(.headline)
-                    .foregroundStyle(Color.klusTekst)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 8)
-            }
-            .buttonStyle(.glass)
         }
-    }
-
-    private func sectie(_ titel: String, @ViewBuilder inhoud: () -> some View) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text(titel)
-                .font(.footnote.weight(.semibold))
-                .textCase(.uppercase)
-                .foregroundStyle(Color.klusTekstZacht)
-            inhoud()
-        }
+        .padding(10)
+        .glassEffect(.regular, in: .capsule)
+        .padding(.horizontal, 20)
+        .padding(.bottom, 4)
     }
 }
 
-/// Foto's om doorheen te swipen, met teller en bolletjes als er meer dan één is.
 private struct FotoGalerij: View {
-    let fotos: [URL]
+    let klus: Klus
+    let ruimteOnder: CGFloat
 
     @State private var huidige = 0
 
     var body: some View {
-        TabView(selection: $huidige) {
-            ForEach(fotos.indices, id: \.self) { index in
-                AsyncImage(url: fotos[index]) { fase in
-                    if let afbeelding = fase.image {
-                        afbeelding.resizable().scaledToFill()
-                    } else {
-                        Color.klusSalie.overlay {
-                            Image(systemName: fase.error == nil ? "photo" : "photo.badge.exclamationmark")
-                                .font(.largeTitle)
-                                .foregroundStyle(Color.klusGroen.opacity(0.5))
+        Group {
+            if klus.fotos.isEmpty {
+                plaatshouder(icoon: klus.soort.icoon)
+            } else {
+                TabView(selection: $huidige) {
+                    ForEach(klus.fotos.indices, id: \.self) { index in
+                        KlusAfbeelding(url: klus.fotos[index], maxPunten: 440) {
+                            plaatshouder(icoon: "photo")
                         }
+                        .containerRelativeFrame(.horizontal)
+                        .clipped()
+                        .accessibilityLabel("Foto \(index + 1) van \(klus.fotos.count)")
+                        .tag(index)
                     }
                 }
-                .accessibilityLabel("Foto \(index + 1) van \(fotos.count)")
-                .tag(index)
+                .tabViewStyle(.page(indexDisplayMode: .never))
             }
         }
-        .tabViewStyle(.page(indexDisplayMode: fotos.count > 1 ? .always : .never))
-        .overlay(alignment: .topTrailing) {
-            if fotos.count > 1 {
-                Text("\(huidige + 1)/\(fotos.count)")
-                    .font(.footnote.weight(.semibold))
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 4)
-                    .background(.black.opacity(0.35), in: .capsule)
-                    .padding(14)
+        .overlay(alignment: .bottom) {
+            if klus.fotos.count > 1 {
+                HStack(spacing: 6) {
+                    ForEach(klus.fotos.indices, id: \.self) { index in
+                        Circle()
+                            .fill(.white.opacity(index == huidige ? 1 : 0.5))
+                            .frame(width: 7, height: 7)
+                    }
+                }
+                .padding(.bottom, ruimteOnder + 16)
+                .animation(.snappy, value: huidige)
+                .accessibilityHidden(true)
             }
         }
-        .frame(height: 240)
-        .clipShape(.rect(cornerRadius: 28))
+    }
+
+    private func plaatshouder(icoon: String) -> some View {
+        Color.klusSalie.overlay {
+            Image(systemName: icoon)
+                .font(.system(size: 44))
+                .foregroundStyle(Color.klusGroen.opacity(0.5))
+                .padding(.bottom, ruimteOnder)
+        }
     }
 }
 
