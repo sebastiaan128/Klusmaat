@@ -1,10 +1,3 @@
-//
-//  FiltersView.swift
-//  Klusmaat
-//
-//  Feature Klussen: sheet om de zoekopdracht en de zoekresultaten te filteren. Wijzigingen gelden pas na het vinkje of de knop onderaan.
-//
-
 import SwiftUI
 
 struct FiltersView: View {

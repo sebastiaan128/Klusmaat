@@ -1,10 +1,3 @@
-//
-//  AppTab.swift
-//  Klusmaat
-//
-//  De tabs in de tabbalk. Plaatsen is de losse "+"-knop rechts; die opent een sheet in plaats van een tab.
-//
-
 enum AppTab: Hashable, CaseIterable {
     case zoeken
     case overzicht

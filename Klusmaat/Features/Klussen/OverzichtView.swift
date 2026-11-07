@@ -1,9 +1,3 @@
-//
-//  OverzichtView.swift
-//  Klusmaat
-//
-//  Overzicht van de feature Klussen: de resultaten van de zoekopdracht op het startscherm, net als op Android.
-//
 
 import SwiftUI
 
