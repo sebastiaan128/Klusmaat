@@ -19,9 +19,10 @@ struct RootView: View {
             tab(.reacties) { BerichtenView() }
             tab(.profiel) { ProfielView() }
 
- 
-            Tab(AppTab.plaatsen.titel, systemImage: AppTab.plaatsen.icoon, value: .plaatsen, role: .prominent) {
+            Tab(value: .plaatsen, role: .prominent) {
                 Color.clear
+            } label: {
+                tabLabel(.plaatsen)
             }
         }
         .tint(.klusGroen)
@@ -31,7 +32,22 @@ struct RootView: View {
     }
 
     private func tab(_ tab: AppTab, @ViewBuilder inhoud: () -> some View) -> some TabContent<AppTab> {
-        Tab(tab.titel, systemImage: tab.icoon, value: tab, content: inhoud)
+        Tab(value: tab, content: inhoud) {
+            tabLabel(tab)
+        }
+    }
+
+    private func tabLabel(_ tab: AppTab) -> some View {
+        Label {
+            Text(tab.titel)
+        } icon: {
+            Image(uiImage: icoon(tab.icoon))
+        }
+    }
+
+    private func icoon(_ naam: String) -> UIImage {
+        let instelling = UIImage.SymbolConfiguration(pointSize: 16, weight: .regular)
+        return UIImage(systemName: naam, withConfiguration: instelling) ?? UIImage()
     }
 
     private var tabSelectie: Binding<AppTab> {

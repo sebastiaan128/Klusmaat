@@ -1,10 +1,3 @@
-//
-//  Klus.swift
-//  Klusmaat
-//
-//  Models/ bevat de datamodellen van de app. Een Klus is een klus die iemand plaatst; velden gelijk aan NearbyJob op Android.
-//
-
 import Foundation
 
 enum KlusSoort: String, CaseIterable, Identifiable {
@@ -43,7 +36,6 @@ struct Klus: Identifiable {
     let id: String
     let titel: String
     let soort: KlusSoort
-    /// Afstand zoals getoond, bijvoorbeeld "1,2 km"
     let afstand: String
     let afstandMeters: Int
     let vergoeding: Int
@@ -55,9 +47,7 @@ struct Klus: Identifiable {
     var gereedschapAanwezig = false
     var afvalWordtAfgevoerd = false
     let beschrijving: String
-    /// Voornaam van wie de klus plaatste
     let eigenaar: String
-    /// Wanneer de klus geplaatst is, bijvoorbeeld "2 uur geleden"
     let geplaatst: String
 
     var isNieuw: Bool { urenGeleden < 12 }
