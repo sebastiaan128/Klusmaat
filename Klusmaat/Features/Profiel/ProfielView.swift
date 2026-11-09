@@ -1,10 +1,3 @@
-//
-//  ProfielView.swift
-//  Klusmaat
-//
-//  Placeholder voor de feature Profiel: inloggen en het profiel van de gebruiker.
-//
-
 import SwiftUI
 
 struct ProfielView: View {

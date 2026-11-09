@@ -31,7 +31,6 @@ struct HomeView: View {
         .scrollIndicators(.hidden)
         .background(.white)
         .task {
-            // Postcode alvast invullen, behalve als de gebruiker zelf al iets heeft getypt
             guard filters.postcode.isEmpty, let postcode = await LocatieService.huidigePostcode(),
                   filters.postcode.isEmpty else { return }
             filters.postcode = postcode
@@ -105,7 +104,6 @@ struct HomeView: View {
                 }
             }
         }
-        // Alleen de waarde rechts opent het menu, zodat de rij zelf blijft staan
         .pickerStyle(.menu)
         .tint(Color.klusTekstZacht)
         .background(Color.klusPapier, in: .rect(cornerRadius: 24))
@@ -141,7 +139,6 @@ struct HomeView: View {
                     .font(.system(size: 22, weight: .medium))
                     .foregroundStyle(Color.klusGroen)
                     .frame(width: 52, height: 52)
-                    .background(Color.klusSalie, in: .rect(cornerRadius: 14))
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Zelf hulp nodig?")
@@ -166,7 +163,6 @@ struct HomeView: View {
     }
 }
 
-/// Eén regel in de filterkaart: icoon, titel en rechts de waarde.
 private struct FilterRij<Waarde: View>: View {
     let icoon: String
     let titel: String
@@ -184,7 +180,6 @@ private struct FilterRij<Waarde: View>: View {
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundStyle(Color.klusGroen)
                 .frame(width: 32, height: 32)
-                .background(Color.klusSalie, in: .rect(cornerRadius: 9))
 
             Text(titel)
                 .foregroundStyle(Color.klusTekst)

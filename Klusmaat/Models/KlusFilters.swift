@@ -1,11 +1,3 @@
-//
-//  KlusFilters.swift
-//  Klusmaat
-//
-//  Models/ bevat de datamodellen van de app. KlusFilters zijn de zoekfilters van het startscherm en de filtersheet,
-//  gelijk aan JobSearch op Android.
-//
-
 import Foundation
 
 enum KlusSortering: String, CaseIterable, Identifiable {
@@ -27,7 +19,6 @@ enum KlusSortering: String, CaseIterable, Identifiable {
 struct KlusFilters: Equatable {
     var soort: KlusSoort?
     var postcode = ""
-    /// nil betekent overal
     var straalKm: Int? = 10
     var minVergoeding: Int?
     var maxVergoeding: Int?
@@ -46,13 +37,11 @@ struct KlusFilters: Equatable {
         return "\(plaats.isEmpty ? "Jouw buurt" : plaats) · \(straalKm.map { "\($0) km" } ?? "overal")"
     }
 
-    /// Aantal filters uit de filtersheet, voor het bolletje op de filterknop.
     var aantalVerfijningen: Int {
         [minVergoeding != nil, maxVergoeding != nil, timing != nil, gereedschapAanwezig, afvalWordtAfgevoerd]
             .filter { $0 }.count + duren.count
     }
 
-    /// Laat de zoekopdracht van het startscherm staan en wist alleen de filters uit de sheet.
     func zonderVerfijningen() -> KlusFilters {
         KlusFilters(soort: soort, postcode: postcode, straalKm: straalKm)
     }
@@ -75,7 +64,6 @@ extension Array where Element == Klus {
     }
 }
 
-/// "12 klussen", "1 tuinklus", "3 reparaties", zoals jobCountLabel op Android.
 func klussenLabel(_ aantal: Int, soort: KlusSoort?) -> String {
     switch soort {
     case .tuin: aantal == 1 ? "1 tuinklus" : "\(aantal) tuinklussen"

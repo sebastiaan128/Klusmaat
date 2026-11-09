@@ -19,7 +19,7 @@ enum AppTab: Hashable, CaseIterable {
         switch self {
         case .zoeken: "magnifyingglass"
         case .overzicht: "doc.text"
-        case .reacties: "bubble.left"
+        case .reacties: "message"
         case .profiel: "person"
         case .plaatsen: "plus"
         }
