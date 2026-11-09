@@ -6,7 +6,6 @@ struct KlusDetailView: View {
     @State private var helptMee = false
     @State private var bewaard = false
 
-    /// Hoeveel de witte kaart over de foto's valt
     private let overlap: CGFloat = 32
 
     var body: some View {

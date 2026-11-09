@@ -1,10 +1,3 @@
-//
-//  PlaatsenView.swift
-//  Klusmaat
-//
-//  Feature Klussen: een nieuwe klus plaatsen.
-//
-
 import SwiftUI
 
 struct PlaatsenView: View {
