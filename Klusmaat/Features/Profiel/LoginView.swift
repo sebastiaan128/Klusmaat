@@ -142,7 +142,7 @@ struct LoginView: View {
                     .padding(.top, 10)
                     .padding(.bottom, 10)
 
-                    NavigationLink(destination: HomeView()) {
+                    NavigationLink(destination: HomeView(filters: .constant(KlusFilters()))) {
                         HStack(spacing: 10) {
                             Image("Google_Symbol_0")
                                 .resizable()
