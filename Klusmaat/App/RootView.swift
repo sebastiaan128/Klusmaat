@@ -26,7 +26,7 @@ struct RootView: View {
                 BerichtenView()
             }
             Tab("Account", systemImage: "person.fill", value: .account) {
-                ProfielView()
+                LoginView()
             }
         }
     }
