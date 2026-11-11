@@ -17,7 +17,7 @@ struct RootView: View {
             }
             tab(.overzicht) { OverzichtView(filters: $filters) }
             tab(.reacties) { BerichtenView() }
-            tab(.profiel) { ProfielView() }
+            tab(.profiel) { LoginView() }
 
  
             Tab(AppTab.plaatsen.titel, systemImage: AppTab.plaatsen.icoon, value: .plaatsen, role: .prominent) {
