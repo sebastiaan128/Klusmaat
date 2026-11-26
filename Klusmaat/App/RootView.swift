@@ -1,63 +1,66 @@
 import SwiftUI
 
 struct RootView: View {
-    @State private var geselecteerdeTab: AppTab = .zoeken
-    @State private var toontPlaatsen = false
-    @State private var filters = KlusFilters()
+    @State private var isShowingPost = false
+    private let state = AppState.shared
 
     var body: some View {
-        TabView(selection: tabSelectie) {
-            tab(.zoeken) {
-                HomeView(
-                    filters: $filters,
-                    onToonResultaten: { geselecteerdeTab = .overzicht },
-                    onProfiel: { geselecteerdeTab = .profiel },
-                    onPlaatsen: { toontPlaatsen = true }
-                )
-            }
-            tab(.overzicht) { OverzichtView(filters: $filters) }
-            tab(.reacties) { BerichtenView() }
-            tab(.profiel) { LoginView() }
+        TabView(selection: tabSelection) {
+            tab(.search) { HomeView() }
+            tab(.overview) { OverviewView() }
+            tab(.replies) { MessagesView() }
+            tab(.profile) { AccountView() }
 
-            Tab(value: .plaatsen, role: .prominent) {
+            Tab(value: .post, role: .prominent) {
                 Color.clear
             } label: {
-                tabLabel(.plaatsen)
+                Label {
+                    Text(AppTab.post.title)
+                } icon: {
+                    Image(uiImage: postIcon)
+                        .renderingMode(.original)
+                }
+            }
+            .accessibilityLabel("Klus plaatsen")
+        }
+        .background(KeyboardDismissOnTap())
+        .tint(.brandGreen)
+        .overlay(alignment: .top) { ToastOverlay() }
+        .sheet(isPresented: $isShowingPost) {
+            PostJobView { AppState.shared.openMyJobs(.posted) }
+        }
+    }
+
+    private func tab(_ tab: AppTab, @ViewBuilder content: () -> some View) -> some TabContent<AppTab> {
+        Tab(value: tab, content: content) {
+            Label {
+                Text(tab.title)
+            } icon: {
+                Image(uiImage: icon(tab.icon))
+                    .environment(\.symbolVariants, .none)
             }
         }
-        .tint(.klusGroen)
-        .sheet(isPresented: $toontPlaatsen) {
-            PlaatsenView()
-        }
     }
 
-    private func tab(_ tab: AppTab, @ViewBuilder inhoud: () -> some View) -> some TabContent<AppTab> {
-        Tab(value: tab, content: inhoud) {
-            tabLabel(tab)
-        }
+    private func icon(_ name: String) -> UIImage {
+        let configuration = UIImage.SymbolConfiguration(pointSize: 15, weight: .regular)
+        return UIImage(systemName: name, withConfiguration: configuration) ?? UIImage()
     }
 
-    private func tabLabel(_ tab: AppTab) -> some View {
-        Label {
-            Text(tab.titel)
-        } icon: {
-            Image(uiImage: icoon(tab.icoon))
-        }
+    private var postIcon: UIImage {
+        let configuration = UIImage.SymbolConfiguration(pointSize: 22, weight: .semibold)
+        return UIImage(systemName: "plus.circle.fill", withConfiguration: configuration)?
+            .withTintColor(UIColor(Color.accentOrange), renderingMode: .alwaysOriginal) ?? UIImage()
     }
 
-    private func icoon(_ naam: String) -> UIImage {
-        let instelling = UIImage.SymbolConfiguration(pointSize: 16, weight: .regular)
-        return UIImage(systemName: naam, withConfiguration: instelling) ?? UIImage()
-    }
-
-    private var tabSelectie: Binding<AppTab> {
+    private var tabSelection: Binding<AppTab> {
         Binding {
-            geselecteerdeTab
+            state.selectedTab
         } set: { tab in
-            if tab == .plaatsen {
-                toontPlaatsen = true
+            if tab == .post {
+                isShowingPost = true
             } else {
-                geselecteerdeTab = tab
+                state.selectedTab = tab
             }
         }
     }

@@ -9,5 +9,5 @@ xcuserdata/
 DerivedData/
 build/
 
-# Firebase-config: elk lokaal uit de Firebase-console halen
+# Firebase configuration contains environment-specific credentials.
 GoogleService-Info.plist
