@@ -1,27 +1,24 @@
 enum AppTab: Hashable, CaseIterable {
-    case zoeken
-    case overzicht
-    case reacties
-    case profiel
-    case plaatsen
+    case search
+    case overview
+    case replies
+    case profile
 
-    var titel: String {
+    var title: String {
         switch self {
-        case .zoeken: "Zoeken"
-        case .overzicht: "Overzicht"
-        case .reacties: "Reacties"
-        case .profiel: "Profiel"
-        case .plaatsen: "Plaatsen"
+        case .search: "Zoeken"
+        case .overview: "Mijn klussen"
+        case .replies: "Reacties"
+        case .profile: "Profiel"
         }
     }
 
-    var icoon: String {
+    var icon: String {
         switch self {
-        case .zoeken: "magnifyingglass"
-        case .overzicht: "doc.text"
-        case .reacties: "bubble.left"
-        case .profiel: "person"
-        case .plaatsen: "plus"
+        case .search: "magnifyingglass"
+        case .overview: "list.bullet.clipboard"
+        case .replies: "message"
+        case .profile: "person"
         }
     }
 }

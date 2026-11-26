@@ -20,11 +20,11 @@ Het project gebruikt gesynchroniseerde folders: bestanden die je in `Klusmaat/` 
 Klusmaat/
   App/            Entry point (KlusmaatApp) en het eerste scherm (RootView).
   Features/       Eén map per feature met de bijbehorende schermen.
-    Klussen/      Klussen bekijken, plaatsen en beheren.
-    Profiel/      Het profiel van de gebruiker.
-    Berichten/    Berichten tussen gebruikers.
-    Gereedschap/  Gereedschap delen en lenen.
-  Models/         Datamodellen zoals Klus en Gebruiker.
+    Jobs/         Klussen bekijken, plaatsen en beheren.
+    Profile/      Het profiel van de gebruiker.
+    Messages/     Berichten tussen gebruikers.
+    Tools/        Gereedschap delen en lenen.
+  Models/         Datamodellen zoals Job en User.
   Services/       Logica die met externe systemen praat, zoals authenticatie en opslag.
   Shared/
     Components/   Herbruikbare SwiftUI-views die door meerdere features gebruikt worden.
