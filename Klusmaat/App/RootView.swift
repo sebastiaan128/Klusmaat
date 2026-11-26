@@ -1,44 +1,64 @@
 import SwiftUI
 
 struct RootView: View {
-    @State private var isShowingPost = false
-    private let state = AppState.shared
+    @Bindable private var state = AppState.shared
 
     var body: some View {
         TabView(selection: tabSelection) {
-            tab(.search) { HomeView() }
-            tab(.overview) { OverviewView() }
-            tab(.replies) { MessagesView() }
-            tab(.profile) { AccountView() }
-
-            Tab(value: .post, role: .prominent) {
-                Color.clear
-            } label: {
-                Label {
-                    Text(AppTab.post.title)
-                } icon: {
-                    Image(uiImage: postIcon)
-                        .renderingMode(.original)
+            ForEach(AppTab.allCases, id: \.self) { tab in
+                Tab(value: tab) {
+                    content(for: tab)
+                } label: {
+                    Label {
+                        Text(tab.title)
+                    } icon: {
+                        Image(uiImage: icon(tab.icon))
+                            .environment(\.symbolVariants, .none)
+                    }
                 }
             }
-            .accessibilityLabel("Klus plaatsen")
+
+            Tab(value: AppTab?.none, role: .prominent) {
+                Color.clear
+            } label: {
+                Label("Klus plaatsen", systemImage: "plus")
+            }
         }
         .background(KeyboardDismissOnTap())
         .tint(.brandGreen)
-        .overlay(alignment: .top) { ToastOverlay() }
-        .sheet(isPresented: $isShowingPost) {
-            PostJobView { AppState.shared.openMyJobs(.posted) }
+        .overlay {
+            ZStack(alignment: .bottomTrailing) {
+                Color.clear
+                if !state.isTabBarHidden { postButtonFace }
+            }
+            .ignoresSafeArea()
+            .allowsHitTesting(false)
+        }
+        .sheet(isPresented: $state.isShowingPost) {
+            PostJobView {
+                state.show("Je klus is geplaatst", icon: "checkmark.circle.fill", destination: .posted)
+            }
         }
     }
 
-    private func tab(_ tab: AppTab, @ViewBuilder content: () -> some View) -> some TabContent<AppTab> {
-        Tab(value: tab, content: content) {
-            Label {
-                Text(tab.title)
-            } icon: {
-                Image(uiImage: icon(tab.icon))
-                    .environment(\.symbolVariants, .none)
-            }
+    private var postButtonFace: some View {
+        Image(systemName: "plus")
+            .font(.title2.weight(.semibold))
+            .foregroundStyle(.white)
+            .frame(width: 62, height: 62)
+            .glassEffect(.regular.tint(.brandGreen), in: .circle)
+            .padding(.trailing, 21)
+            .padding(.bottom, 21)
+            .accessibilityHidden(true)
+    }
+
+    @ViewBuilder
+    private func content(for tab: AppTab) -> some View {
+        switch tab {
+        case .search: HomeView()
+        case .overview: OverviewView()
+        case .replies: MessagesView()
+        case .profile: AccountView()
         }
     }
 
@@ -47,21 +67,11 @@ struct RootView: View {
         return UIImage(systemName: name, withConfiguration: configuration) ?? UIImage()
     }
 
-    private var postIcon: UIImage {
-        let configuration = UIImage.SymbolConfiguration(pointSize: 22, weight: .semibold)
-        return UIImage(systemName: "plus.circle.fill", withConfiguration: configuration)?
-            .withTintColor(UIColor(Color.accentOrange), renderingMode: .alwaysOriginal) ?? UIImage()
-    }
-
-    private var tabSelection: Binding<AppTab> {
+    private var tabSelection: Binding<AppTab?> {
         Binding {
             state.selectedTab
         } set: { tab in
-            if tab == .post {
-                isShowingPost = true
-            } else {
-                state.selectedTab = tab
-            }
+            if let tab { state.selectedTab = tab } else { state.isShowingPost = true }
         }
     }
 }

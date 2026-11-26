@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct OverviewView: View {
-    @State private var isShowingPost = false
     private let activity = JobActivity.shared
     @Bindable private var state = AppState.shared
 
@@ -29,7 +28,7 @@ struct OverviewView: View {
                              : "Bied je hulp aan bij een klus in je buurt. Je vindt je aanbod hier terug.")
                     } actions: {
                         if section == .posted {
-                            Button("Plaats een klus") { isShowingPost = true }
+                            Button("Plaats een klus") { state.isShowingPost = true }
                                 .buttonStyle(.borderedProminent)
                                 .tint(.brandGreen)
                         }
@@ -55,8 +54,8 @@ struct OverviewView: View {
                 }
             }
             .background(Color.paper)
+            .toastArea()
             .navigationTitle("Mijn klussen")
-            .sheet(isPresented: $isShowingPost) { PostJobView { state.myJobsSection = .posted } }
             .tint(.brandGreen)
         }
     }

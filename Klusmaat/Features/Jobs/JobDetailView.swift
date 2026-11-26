@@ -23,10 +23,17 @@ struct JobDetailView: View {
         .scrollIndicators(.hidden)
         .ignoresSafeArea(edges: .top)
         .background(Color.paper)
-        .safeAreaInset(edge: .bottom) { actionBar }
+        .safeAreaInset(edge: .bottom) {
+            VStack(spacing: 0) {
+                ToastOverlay()
+                actionBar
+            }
+        }
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackgroundVisibility(.hidden, for: .navigationBar)
         .toolbarVisibility(.hidden, for: .tabBar)
+        .onAppear { AppState.shared.isTabBarHidden = true }
+        .onDisappear { AppState.shared.isTabBarHidden = false }
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {
                 Button {

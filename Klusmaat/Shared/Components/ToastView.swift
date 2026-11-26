@@ -10,7 +10,7 @@ struct ToastOverlay: View {
                     if let destination = toast.destination { state.openMyJobs(destination) }
                     withAnimation(.snappy) { state.toast = nil }
                 }
-                .transition(.move(edge: .top).combined(with: .opacity))
+                .transition(.move(edge: .bottom).combined(with: .opacity))
                 .task(id: toast.id) {
                     try? await Task.sleep(for: .seconds(toast.destination == nil ? 3 : 5))
                     guard !Task.isCancelled else { return }
@@ -20,7 +20,13 @@ struct ToastOverlay: View {
         }
         .animation(.snappy, value: state.toast)
         .padding(.horizontal, 16)
-        .padding(.top, 4)
+        .padding(.bottom, 8)
+    }
+}
+
+extension View {
+    func toastArea() -> some View {
+        overlay(alignment: .bottom) { ToastOverlay() }
     }
 }
 
@@ -39,7 +45,7 @@ private struct ToastView: View {
                         .font(.subheadline.weight(.semibold))
                         .fixedSize(horizontal: false, vertical: true)
                     if toast.destination != nil {
-                        Text("Tik om je klussen te bekijken")
+                        Text("Tik om je klus te bekijken")
                             .font(.footnote)
                             .foregroundStyle(Color.textSecondary)
                     }

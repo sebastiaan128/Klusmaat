@@ -25,6 +25,8 @@ final class AppState {
     var selectedTab: AppTab = .search
     var myJobsSection = MyJobsSection.posted
     var toast: Toast?
+    var isShowingPost = false
+    var isTabBarHidden = false
 
     func show(_ message: String, icon: String = "checkmark.circle.fill",
               style: Toast.Style = .success, destination: MyJobsSection? = nil) {

@@ -3,7 +3,6 @@ enum AppTab: Hashable, CaseIterable {
     case overview
     case replies
     case profile
-    case post
 
     var title: String {
         switch self {
@@ -11,7 +10,6 @@ enum AppTab: Hashable, CaseIterable {
         case .overview: "Mijn klussen"
         case .replies: "Reacties"
         case .profile: "Profiel"
-        case .post: "Plaats klus"
         }
     }
 
@@ -21,7 +19,6 @@ enum AppTab: Hashable, CaseIterable {
         case .overview: "list.bullet.clipboard"
         case .replies: "message"
         case .profile: "person"
-        case .post: "plus"
         }
     }
 }

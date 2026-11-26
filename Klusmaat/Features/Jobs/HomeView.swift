@@ -53,6 +53,7 @@ struct HomeView: View {
             .scrollIndicators(.hidden)
             .scrollDismissesKeyboard(.interactively)
             .background(Color.paper)
+            .toastArea()
             .navigationTitle("Klussen")
             .navigationBarTitleDisplayMode(.inline)
             .safeAreaInset(edge: .top, spacing: 0) {

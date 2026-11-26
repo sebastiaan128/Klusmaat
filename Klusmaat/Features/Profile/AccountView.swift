@@ -25,6 +25,7 @@ struct AccountView: View {
                         }
                     }
                     .safeAreaInset(edge: .top, spacing: 0) { switcher }
+                    .toastArea()
                 }
             }
         }

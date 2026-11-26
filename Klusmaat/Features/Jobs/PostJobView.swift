@@ -16,7 +16,6 @@ struct PostJobView: View {
     @State private var wasteRemoved = false
     @State private var isSubmitted = false
     @State private var isShowingDiscard = false
-    @State private var isShowingSuccess = false
 
     static let summaryLimit = 80
 
@@ -154,14 +153,6 @@ struct PostJobView: View {
             } message: {
                 Text("Wat je hebt ingevuld gaat verloren.")
             }
-            .alert("Je klus is geplaatst", isPresented: $isShowingSuccess) {
-                Button("Bekijk mijn klussen") {
-                    dismiss()
-                    onPosted()
-                }
-            } message: {
-                Text("‘\(trimmedTitle)’ staat online. Buren in de buurt kunnen nu hulp aanbieden.")
-            }
             .safeAreaInset(edge: .bottom) {
                 Button(action: submit) {
                     Label("Plaats klus", systemImage: "plus")
@@ -170,8 +161,7 @@ struct PostJobView: View {
                         .padding(.vertical, 8)
                 }
                 .buttonStyle(.glassProminent)
-                .tint(.accentOrange)
-                .disabled(isShowingSuccess)
+                .tint(.brandGreen)
                 .padding(.horizontal, 20)
                 .padding(.bottom, 8)
             }
@@ -207,7 +197,8 @@ struct PostJobView: View {
             timing: PostedJob.timing(for: chosenDate), duration: duration,
             toolsProvided: toolsProvided, wasteRemoved: wasteRemoved
         ))
-        isShowingSuccess = true
+        dismiss()
+        onPosted()
     }
 }
 

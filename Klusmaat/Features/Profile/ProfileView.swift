@@ -22,6 +22,7 @@ struct ProfileView: View {
             }
             .padding(.bottom, 16)
         }
+        .toastArea()
         .navigationTitle("Profiel")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
