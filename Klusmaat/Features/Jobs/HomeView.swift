@@ -4,7 +4,6 @@ struct HomeView: View {
     @State private var search = JobSearch(jobs: JobActivity.shared.jobs)
     @State private var isShowingFilters = false
     @FocusState private var isSearchFocused: Bool
-    @AppStorage("home.introDismissed") private var hasSeenIntro = false
     private let activity = JobActivity.shared
 
     var body: some View {
@@ -14,11 +13,6 @@ struct HomeView: View {
                     locationMenu
                         .padding(.horizontal, 20)
                         .padding(.vertical, 12)
-                    if !hasSeenIntro {
-                        intro
-                            .padding(.horizontal, 20)
-                            .padding(.bottom, 12)
-                    }
                     CategoryBar(selected: $search.filters.category)
                     resultsHeader
                     if search.results.isEmpty {
@@ -54,18 +48,23 @@ struct HomeView: View {
             .scrollDismissesKeyboard(.interactively)
             .background(Color.paper)
             .toastArea()
-            .navigationTitle("Klussen")
-            .navigationBarTitleDisplayMode(.inline)
-            .safeAreaInset(edge: .top, spacing: 0) {
-                searchBar
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 8)
-            }
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink { ProfileView() } label: { Image(systemName: "person") }
-                        .accessibilityLabel("Profiel")
+            .toolbarVisibility(.hidden, for: .navigationBar)
+            .safeAreaBar(edge: .top, spacing: 0) {
+                HStack(spacing: 10) {
+                    searchBar
+                    NavigationLink { ProfileView() } label: {
+                        Image(systemName: "person")
+                            .font(.title3)
+                            .foregroundStyle(Color.textPrimary)
+                            .frame(width: 48, height: 48)
+                            .contentShape(.circle)
+                    }
+                    .buttonStyle(.plain)
+                    .glassEffect(.regular.interactive(), in: .circle)
+                    .accessibilityLabel("Profiel")
                 }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 8)
             }
             .sheet(isPresented: $isShowingFilters) {
                 FiltersView(filters: $search.filters, jobs: activity.jobs)
@@ -74,37 +73,6 @@ struct HomeView: View {
             .tint(.textPrimary)
             .onChange(of: activity.posted.map(\.id)) { search.setJobs(activity.jobs) }
         }
-    }
-
-    private var intro: some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(systemName: "hand.raised.fill")
-                .font(.title3)
-                .foregroundStyle(Color.brandGreen)
-                .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Help je buren en verdien wat bij")
-                    .font(.subheadline.weight(.semibold))
-                Text("Kies een klus, tik op ‘Ik wil helpen’ en ontvang de vergoeding als je de klus hebt gedaan. Helpen kost je niets.")
-                    .font(.footnote)
-                    .foregroundStyle(Color.textSecondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            Spacer(minLength: 0)
-            Button {
-                withAnimation(.snappy) { hasSeenIntro = true }
-            } label: {
-                Image(systemName: "xmark")
-                    .font(.footnote.weight(.semibold))
-                    .foregroundStyle(Color.textSecondary)
-                    .frame(width: 32, height: 32)
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel("Uitleg sluiten")
-        }
-        .foregroundStyle(Color.textPrimary)
-        .padding(14)
-        .background(Color.sage.opacity(0.3), in: .rect(cornerRadius: 16))
     }
 
     private var searchBar: some View {
